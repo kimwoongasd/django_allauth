@@ -156,6 +156,14 @@ ACCOUNT_SIGNUP_FORM_CLASS = "plate.forms.SignupForm"
 # 오류시 비밀번호 초기화 안하고 남기기
 ACCOUNT_PASSWORD_INPUT_RENDER_VALUE = True
 
+# 이메일 인증
+# mandatory : 이메일 인증할 때 까지 로근인 불가능, 
+# optional : 이메일 인증 발송되지만 로그인은 됨 = 기본값
+# ACCOUNT_EMAIL_VARIFCATION = "optional"
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "account_email_confirmation_done"
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "account_email_confirmation_done"
+
 # Email settings
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
