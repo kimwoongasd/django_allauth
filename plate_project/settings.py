@@ -164,6 +164,9 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "account_email_confirmation_done"
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "account_email_confirmation_done"
 
+# 비밀번호 재설정 링크 유효기간
+PASSWORD_RESET_TIMEOUT_DAY = 3
+
 # Email settings
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
