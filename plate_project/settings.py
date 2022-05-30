@@ -147,6 +147,21 @@ ACCOUNT_SIGNUP_REDIRECT_URL = "index"
 LOGIN_REDIRECT_URL = "index"
 ACCOUNT_LOGOUT_ON_GET = True
 
+# 닉네임 대신 이메일로 로그인
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+
+# 세션 쿠키를 이용하여 기억
+ACCOUNT_SESSION_REMEMBER = True
+# 세션 쿠키 기억시간
+# SESSION_COOKIE_AGE = 7200
+
+# python manage.py clearsessions 를 통해서 쿠키를 주기적으로 지워준다
+
+# forms.py 적용
+ACCOUNT_SIGNUP_FORM_CLASS = "plate.forms.SignupForm"
+
 # Email settings
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
