@@ -95,17 +95,8 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+        "NAME" : "plate.validators.CustomPasswordValidator"
+    }
 ]
 
 
@@ -161,6 +152,9 @@ ACCOUNT_SESSION_REMEMBER = True
 
 # forms.py 적용
 ACCOUNT_SIGNUP_FORM_CLASS = "plate.forms.SignupForm"
+
+# 오류시 비밀번호 초기화 안하고 남기기
+ACCOUNT_PASSWORD_INPUT_RENDER_VALUE = True
 
 # Email settings
 
