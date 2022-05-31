@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'plate',
-    
+    'widget_tweaks',
     # The following apps are required:
     'allauth',
     'allauth.account',
