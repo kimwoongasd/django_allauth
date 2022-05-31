@@ -167,6 +167,9 @@ ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "account_email_confirmation_
 # 비밀번호 재설정 링크 유효기간
 PASSWORD_RESET_TIMEOUT_DAY = 3
 
+# 메시지와 이메일 오버라이딩
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ""
+
 # Email settings
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
