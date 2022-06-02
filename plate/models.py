@@ -35,6 +35,9 @@ class Review(models.Model):
     dt_created = models.DateTimeField(auto_now_add=True)
     dt_modified = models.DateTimeField(auto_now=True)
     
+    # 1 : N 관계
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    
     def __str__(self):
         return self.title
     
