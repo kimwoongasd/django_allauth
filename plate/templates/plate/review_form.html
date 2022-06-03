@@ -2,7 +2,13 @@
 
 {% load widget_tweaks %}
 
-{% block title %}새 포스트 작성 | Coplate{% endblock title %}
+{% block title %}
+  {% if review %}
+    {{ review.title }}
+  {% else %}
+    새 포스트 작성
+  {% endif %} | Plate
+{% endblock title %}
 
 {% block content %}
 <main class="site-body">
@@ -44,6 +50,9 @@
     </div>
     <div class="file">
       <div class="file-content">
+        {% if review.image_1 %}
+          <img src="{{ review.image_1.url }}"
+        {% endif %}
         <div>
           {{ form.image_1 }}
           {% for error in form.image_1.errors %}
@@ -54,6 +63,9 @@
     </div>
     <div class="file">
       <div class="file-content">
+        {% if review.image_2 %}
+          <img src="{{ review.image_2.url }}"
+        {% endif %}
         <div>
           {{ form.image_2 }}
           {% for error in form.image_2.errors %}
@@ -64,6 +76,9 @@
     </div>
     <div class="file">
       <div class="file-content">
+        {% if review.image_3 %}
+          <img src="{{ review.image_3.url }}"
+        {% endif %}
         <div>
           {{ form.image_3 }}
           {% for error in form.image_3.errors %}
@@ -74,7 +89,12 @@
     </div>
 
     <div class="buttons">
-      <a class="cp-button secondary cancel" href="{% url 'index' %}">취소</a>
+      <a 
+        class="cp-button secondary cancel" 
+        href="{% if review.title %} {% url 'review-detail' review.id %}
+        {% else %}{% url 'index' %} {% endif %}">
+        취소
+      </a>
       <button class="cp-button submit" type="submit">완료</button>
     </div>
   </form>

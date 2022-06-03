@@ -1,5 +1,5 @@
 from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from allauth.account.views import PasswordChangeView
 from plate.models import Review
 from .forms import ReviewForm
@@ -25,6 +25,15 @@ class ReviewCreate(CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse("review-detail", kwargs={"review_id":self.object.id})
+
+class ReviewUpdate(UpdateView):
+    model = Review
+    tmeplate_name = "plate/review_form.html"
+    form_class = ReviewForm
+    pk_url_kwarg = "review_id"
     
     def get_success_url(self):
         return reverse("review-detail", kwargs={"review_id":self.object.id})
