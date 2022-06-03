@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.forms import BooleanField
 from .validators import validate_no_special_characters, validate_store_link
 
 # Create your models here.
