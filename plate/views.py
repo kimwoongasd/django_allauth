@@ -1,7 +1,8 @@
 from django.urls import reverse
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from allauth.account.views import PasswordChangeView
 from plate.models import Review
+from .forms import ReviewForm
 
 # Create your views here.
 class IndexListView(ListView):
@@ -15,6 +16,18 @@ class ReviewDetail(DetailView):
     model = Review
     template_name = "plate/review_detail.html"
     pk_url_kwarg = "review_id"
+    
+class ReviewCreate(CreateView):
+    model = Review
+    template_name = "plate/review_form.html"
+    form_class = ReviewForm
+    
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse("review-detail", kwargs={"review_id":self.object.id})
 
 class CustomPasswordChangeView(PasswordChangeView):
     def get_success_url(self):

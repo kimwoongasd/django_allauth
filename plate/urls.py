@@ -7,5 +7,7 @@ urlpatterns = [
         "reviews/<int:review_id>",
         views.ReviewDetail.as_view(),
         name="review-detail"
-    )
+    ),
+    path("review/new/", views.ReviewCreate.as_view(), name="review-create"),
+    
 ]

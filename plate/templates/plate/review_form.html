@@ -1,0 +1,82 @@
+{% extends "plate_base/base_with_navbar.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %}새 포스트 작성 | Coplate{% endblock title %}
+
+{% block content %}
+<main class="site-body">
+  <form class="review-form max-content-width" method="post" autocomplete="off", enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="title">
+      {{ form.title|add_class:"cp-input"|attr:"placeholder:제목" }}
+      {% for error in form.title.errors %}
+        <div class="error-message">{{ error }}</div>
+      {% endfor %}
+    </div>
+    <div class="restaurant-name">
+      {{ form.store_name|add_class:"cp-input"|attr:"placeholder:음식점 이름"}}
+      {% for error in store_name.errors %}
+        <div class="error-message">{{ error }}</div>
+      {% endfor %}
+    </div>
+    <div class="restaurant-link">
+      {{ form.store_link|add_class:"cp-input"|attr:"placeholder:네이버 또는 카카오 플레이스 주소"}}
+      {% for error in form.store_link.errors %}
+        <div class="error-message">{{ error }}</div>
+      {% endfor %}
+    </div>
+    <div class="rating">
+      <div class="cp-stars">
+        {% for radio in form.rating %}
+          {{ radio }}
+        {% endfor %}
+      </div>
+      {% for error in form.rating.errors %}
+        <div class="error-message">{{ error }}</div>
+      {% endfor %}
+    </div>
+    <div class="content">
+      {{ form.content|add_class:"cp-input"|attr:"placeholder:리뷰를 작성해 주세요."|add_error_class:"error"}}
+      {% for error in form.content.errors %}
+        <div class="error-message">{{ error }}</div>
+      {% endfor %}
+    </div>
+    <div class="file">
+      <div class="file-content">
+        <div>
+          {{ form.image_1 }}
+          {% for error in form.image_1.errors %}
+            <div class="error-message">{{ error }}</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="file">
+      <div class="file-content">
+        <div>
+          {{ form.image_2 }}
+          {% for error in form.image_2.errors %}
+            <div class="error-message">{{ error }}</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="file">
+      <div class="file-content">
+        <div>
+          {{ form.image_3 }}
+          {% for error in form.image_3.errors %}
+            <div class="error-message">{{ error }}</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <a class="cp-button secondary cancel" href="{% url 'index' %}">취소</a>
+      <button class="cp-button submit" type="submit">완료</button>
+    </div>
+  </form>
+</main>
+{% endblock content %}

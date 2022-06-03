@@ -20,13 +20,13 @@ class Review(models.Model):
     store_name = models.CharField(max_length=20)
     store_link = models.URLField(validators=[validate_store_link])
     RATING_CHOICE = [
-        (1, 1),
-        (2, 2),
-        (3, 3),
-        (4, 4),
-        (5, 5),
+        (1, "★"),
+        (2, "★★"),
+        (3, "★★★"),
+        (4, "★★★★"),
+        (5, "★★★★★"),
     ]
-    rating = models.IntegerField(choices=RATING_CHOICE)
+    rating = models.IntegerField(choices=RATING_CHOICE, default=None)
     
     image_1 = models.ImageField(upload_to="review_pics")
     image_2 = models.ImageField(upload_to="review_pics", blank=True)
