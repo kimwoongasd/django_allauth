@@ -26,9 +26,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # plate
     path('', include('plate.urls')),
+        path('email-confirmation-required/', 
+         TemplateView.as_view(template_name="account/email_confirmation_required.html"),
+         name="account_email_confirmation_required"),
     # allauth
     path('email-confirmation-done/', 
-         TemplateView.as_view(template_name="plate/email_confirmation_done.html"),
+         TemplateView.as_view(template_name="account/email_confirmation_done.html"),
          name="account_email_confirmation_done"),
     path('password/change/', CustomPasswordChangeView.as_view(), name="account_password_change"),
     path('', include('allauth.urls')),
