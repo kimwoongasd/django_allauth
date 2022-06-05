@@ -140,6 +140,9 @@ AUTHENTICATION_BACKENDS = [
 
 ACCOUNT_SIGNUP_REDIRECT_URL = "index"
 LOGIN_REDIRECT_URL = "index"
+# MIXIN
+LOGIN_URL = "account_login"
+
 ACCOUNT_LOGOUT_ON_GET = True
 
 # 닉네임 대신 이메일로 로그인

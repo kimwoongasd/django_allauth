@@ -1,6 +1,7 @@
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from allauth.account.views import PasswordChangeView
+from braces.views import LoginRequiredMixin
 from plate.models import Review
 from .forms import ReviewForm
 
@@ -17,7 +18,7 @@ class ReviewDetail(DetailView):
     template_name = "plate/review_detail.html"
     pk_url_kwarg = "review_id"
     
-class ReviewCreate(CreateView):
+class ReviewCreate(LoginRequiredMixin, CreateView):
     model = Review
     template_name = "plate/review_form.html"
     form_class = ReviewForm
