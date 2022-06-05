@@ -51,7 +51,7 @@ class ReviewUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return reverse("review-detail", kwargs={"review_id":self.object.id})
 
     def test_func(self, user):
-        review = self.user
+        review = self.get_object()
         return review.author == user
 
     
@@ -68,7 +68,7 @@ class ReviewDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return reverse("index")
     
     def test_func(self, user):
-        review = self.user
+        review = self.get_object()
         return review.author == user
 
 class CustomPasswordChangeView(PasswordChangeView):
