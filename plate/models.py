@@ -1,3 +1,4 @@
+from turtle import update
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.forms import BooleanField
@@ -12,6 +13,10 @@ class User(AbstractUser):
                                 error_messages={"unique": "이미 사용중인 닉네임 입니다"},
                                 )
     
+    # 프로필 사진
+    profile_pic = models.ImageField(default="default_profile_pic.jpg", upload_to="profile_pics")
+    
+    intro = models.CharField(max_length=60, blank=True)
     
     def __str__(self):
         return self.email
