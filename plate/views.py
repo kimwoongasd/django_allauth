@@ -43,7 +43,7 @@ class ReviewUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     tmeplate_name = "plate/review_form.html"
     form_class = ReviewForm
     pk_url_kwarg = "review_id"
-    
+
     raise_exception = True
     redirect_unauthenticated_users = False
     
@@ -53,8 +53,6 @@ class ReviewUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self, user):
         review = self.get_object()
         return review.author == user
-
-    
     
 class ReviewDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Review
@@ -70,7 +68,7 @@ class ReviewDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self, user):
         review = self.get_object()
         return review.author == user
-
+    
 class CustomPasswordChangeView(PasswordChangeView):
     def get_success_url(self):
         return reverse("index")

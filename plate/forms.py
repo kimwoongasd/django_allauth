@@ -1,4 +1,3 @@
-from tkinter import image_names
 from django import forms
 from .models import User, Review
 

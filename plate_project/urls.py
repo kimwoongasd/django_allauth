@@ -26,7 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # plate
     path('', include('plate.urls')),
-        path('email-confirmation-required/', 
+    path('email-confirmation-required/', 
          TemplateView.as_view(template_name="account/email_confirmation_required.html"),
          name="account_email_confirmation_required"),
     # allauth
