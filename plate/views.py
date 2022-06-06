@@ -3,7 +3,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from allauth.account.views import PasswordChangeView
 from braces.views import LoginRequiredMixin, UserPassesTestMixin
 from allauth.account.models import EmailAddress
-from plate.models import Review
+from plate.models import Review, User
 from .forms import ReviewForm
 from .functions import confirmation_required_redirect
 
@@ -68,6 +68,19 @@ class ReviewDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self, user):
         review = self.get_object()
         return review.author == user
+    
+# 유저 프로필
+class ProfileView(DetailView):
+    model = User
+    template_name = "plate/profile.html"
+    pk_url_kwarg = "user_id"
+    context_object_name = "profile_user"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_id = self.kwargs.get("user_id")
+        context["user_reviews"] = Review.objects.filter(author__id=user_id).order_by("-dt_created")[:4]
+        return context
     
 class CustomPasswordChangeView(PasswordChangeView):
     def get_success_url(self):
