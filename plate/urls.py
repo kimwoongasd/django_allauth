@@ -17,5 +17,6 @@ urlpatterns = [
     path("uesrs/<int:user_id>/", views.ProfileView.as_view(), name="profile"),
     path("users/<int:user_id>/reviews/", views.UserReviewListView.as_view(), name="user-review-list"),
     path("set-profile/", views.ProfileSetView.as_view(), name="profile-set"),
+    path("edit-profile/", views.ProfileUpdateView.as_view() , name="profile-update"),
     
 ]
