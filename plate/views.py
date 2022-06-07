@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from allauth.account.views import PasswordChangeView
@@ -82,6 +83,22 @@ class ProfileView(DetailView):
         context["user_reviews"] = Review.objects.filter(author__id=user_id).order_by("-dt_created")[:4]
         return context
     
+class UserReviewListView(ListView):
+    model = User
+    template_name = "plate/user_review_list.html"
+    context_object_name = "user_reviews"
+    paginate_by = 4
+    
+    
+    def get_queryset(self):
+        user_id = self.kwargs.get("user_id")
+        return Review.objects.filter(author__id=user_id).order_by("-dt_created")
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["profile_user"] = get_object_or_404(User, id=self.kwargs.get("user_id"))
+        return context
+
 class CustomPasswordChangeView(PasswordChangeView):
     def get_success_url(self):
         return reverse("index")
