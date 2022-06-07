@@ -138,7 +138,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-ACCOUNT_SIGNUP_REDIRECT_URL = "index"
+ACCOUNT_SIGNUP_REDIRECT_URL = "profile-set"
 LOGIN_REDIRECT_URL = "index"
 # MIXIN
 LOGIN_URL = "account_login"
@@ -158,7 +158,7 @@ ACCOUNT_SESSION_REMEMBER = True
 # python manage.py clearsessions 를 통해서 쿠키를 주기적으로 지워준다
 
 # forms.py 적용
-ACCOUNT_SIGNUP_FORM_CLASS = "plate.forms.SignupForm"
+# ACCOUNT_SIGNUP_FORM_CLASS = "plate.forms.SignupForm"
 
 # 오류시 비밀번호 초기화 안하고 남기기
 ACCOUNT_PASSWORD_INPUT_RENDER_VALUE = True
