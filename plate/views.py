@@ -15,7 +15,6 @@ class IndexListView(ListView):
     template_name = "plate/index.html"
     context_object_name = "reviews"
     paginate_by = 4
-    ordering = ["-dt_created"]
     
 class ReviewDetail(DetailView):
     model = Review
@@ -81,7 +80,7 @@ class ProfileView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user_id = self.kwargs.get("user_id")
-        context["user_reviews"] = Review.objects.filter(author__id=user_id).order_by("-dt_created")[:4]
+        context["user_reviews"] = Review.objects.filter(author__id=user_id)[:4]
         return context
     
 class UserReviewListView(ListView):
@@ -93,7 +92,7 @@ class UserReviewListView(ListView):
     
     def get_queryset(self):
         user_id = self.kwargs.get("user_id")
-        return Review.objects.filter(author__id=user_id).order_by("-dt_created")
+        return Review.objects.filter(author__id=user_id)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
