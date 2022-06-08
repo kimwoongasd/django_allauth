@@ -1,7 +1,7 @@
-from turtle import update
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.forms import BooleanField
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 from .validators import validate_no_special_characters, validate_store_link
 
 # Create your models here.
@@ -17,6 +17,8 @@ class User(AbstractUser):
     profile_pic = models.ImageField(default="default_profile_pic.jpg", upload_to="profile_pics")
     
     intro = models.CharField(max_length=60, blank=True)
+    
+    following = models.ManyToManyField("self", symmetrical=False)
     
     def __str__(self):
         return self.email
@@ -48,4 +50,32 @@ class Review(models.Model):
         return self.title
     
     
+class Comment(models.Model):
+    content = models.CharField(max_length=500, blank=False)
+    
+    dt_created = models.DateTimeField(auto_now_add=True)
+    dt_updated = models.DateTimeField(auto_now=True)
+    
+    # 유저와 1 : N 관계
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    # 리뷰와 1 : N 관계
+    review = models.ForeignKey(Review, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.content[:30]
+    
+
+class Like(models.Model):
+    dt_created = models.DateTimeField(auto_now_add=True)
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    
+    object_id = models.PositiveIntegerField()
+    
+    liked_object = GenericForeignKey("content_type", "object_id")
+    
+    def __str__(self):
+        return f"({self.user}, {self.liked_object})"
     
