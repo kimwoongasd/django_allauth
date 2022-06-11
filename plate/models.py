@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from .validators import validate_no_special_characters, validate_store_link
 
 # Create your models here.
@@ -18,7 +18,7 @@ class User(AbstractUser):
     
     intro = models.CharField(max_length=60, blank=True)
     
-    following = models.ManyToManyField("self", symmetrical=False, blank=True)
+    following = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="followers")
     
     def __str__(self):
         return self.email
@@ -44,7 +44,9 @@ class Review(models.Model):
     dt_modified = models.DateTimeField(auto_now=True)
     
     # 1 : N 관계
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews")
+    
+    likes = GenericRelation("Like")
     
     def __str__(self):
         return self.title
@@ -60,9 +62,11 @@ class Comment(models.Model):
     dt_updated = models.DateTimeField(auto_now=True)
     
     # 유저와 1 : N 관계
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
     # 리뷰와 1 : N 관계
-    review = models.ForeignKey(Review, on_delete=models.CASCADE)
+    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name="comments")
+    
+    likes = GenericRelation("Like")
     
     def __str__(self):
         return self.content[:30]
@@ -74,7 +78,7 @@ class Comment(models.Model):
 class Like(models.Model):
     dt_created = models.DateTimeField(auto_now_add=True)
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="likes")
     
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     
