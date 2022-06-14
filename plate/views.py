@@ -2,11 +2,10 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from allauth.account.views import PasswordChangeView
-from braces.views import LoginRequiredMixin, UserPassesTestMixin
-from allauth.account.models import EmailAddress
+from braces.views import LoginRequiredMixin
 from plate.models import Review, User, Comment
 from .forms import ReviewForm, ProfileForm, CommentForm
-from .functions import confirmation_required_redirect
+from .mixins import LoginAndVerificationRequiredMixin, LoginAndOwnershipRequiredMixin
 
 # Create your views here.
 class IndexListView(ListView):
@@ -25,13 +24,10 @@ class ReviewDetail(DetailView):
         context["form"] = CommentForm()
         return context
         
-class ReviewCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+class ReviewCreate(LoginAndVerificationRequiredMixin, CreateView):
     model = Review
     template_name = "plate/review_form.html"
     form_class = ReviewForm
-    
-    redirect_unauthenticated_users = True
-    raise_exception = confirmation_required_redirect
     
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -40,39 +36,23 @@ class ReviewCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def get_success_url(self):
         return reverse("review-detail", kwargs={"review_id":self.object.id})
 
-    def test_func(self, user):
-        return EmailAddress.objects.filter(user=user, verified=True).exists()
-   
-class ReviewUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class ReviewUpdate(LoginAndOwnershipRequiredMixin, UpdateView):
     model = Review
     tmeplate_name = "plate/review_form.html"
     form_class = ReviewForm
     pk_url_kwarg = "review_id"
 
-    raise_exception = True
-    redirect_unauthenticated_users = False
-    
     def get_success_url(self):
         return reverse("review-detail", kwargs={"review_id":self.object.id})
-
-    def test_func(self, user):
-        review = self.get_object()
-        return review.author == user
     
-class ReviewDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class ReviewDelete(LoginAndOwnershipRequiredMixin, DeleteView):
     model = Review
     template_name = "plate/review_confirm_delete.html"
     pk_url_kwarg = "review_id"
-    
-    raise_exception = True
-    redirect_unauthenticated_users = False
-    
+
     def get_success_url(self):
         return reverse("index")
     
-    def test_func(self, user):
-        review = self.get_object()
-        return review.author == user
     
 # 유저 프로필
 class ProfileView(DetailView):
@@ -125,13 +105,10 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse("profile", kwargs={"user_id": self.request.user.id})
 
-class CommentCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+class CommentCreateView(LoginAndVerificationRequiredMixin, CreateView):
     http_method_names = ["post"]
     model = Comment
     form_class = CommentForm
-    
-    redirect_unauthenticated_users = True
-    raise_exception = confirmation_required_redirect
     
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -140,9 +117,6 @@ class CommentCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     
     def get_success_url(self):
         return reverse("review-detail", kwargs={"review_id":self.kwargs.get("review_id")})
-    
-    def test_func(self, user):
-        return EmailAddress.objects.filter(user=user, verified=True).exists()
     
 class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     def get_success_url(self):
