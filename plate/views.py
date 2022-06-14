@@ -1,9 +1,10 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
+from django.contrib.contenttypes.models import ContentType
 from allauth.account.views import PasswordChangeView
 from braces.views import LoginRequiredMixin
-from plate.models import Review, User, Comment
+from plate.models import Review, User, Comment, Like
 from .forms import ReviewForm, ProfileForm, CommentForm
 from .mixins import LoginAndVerificationRequiredMixin, LoginAndOwnershipRequiredMixin
 
@@ -22,6 +23,8 @@ class ReviewDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = CommentForm()
+        context["review_ctype_id"] = ContentType.objects.get(model="review").id
+        context["comment_ctype_id"] = ContentType.objects.get(model="comment").id
         return context
         
 class ReviewCreate(LoginAndVerificationRequiredMixin, CreateView):
@@ -134,6 +137,21 @@ class CommentDeleteView(LoginAndOwnershipRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse("review-detail", kwargs={"review_id":self.object.review.id})
+
+class ProcessLikeView(LoginAndVerificationRequiredMixin, View):
+    http_method_names = ["post"]
+    
+    def post(self, request, *args, **kwargs):
+        like, created = Like.objects.get_or_create(
+            user = self.request.user,
+            content_type_id = self.kwargs.get("content_type_id"),
+            object_id = self.kwargs.get("object_id"),
+        )
+
+        if not created:
+            like.delete()
+            
+        return redirect(self.request.META["HTTP_REFERER"])
 
 class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     def get_success_url(self):
