@@ -6,7 +6,7 @@ from allauth.account.views import PasswordChangeView
 from braces.views import LoginRequiredMixin, UserPassesTestMixin
 from allauth.account.models import EmailAddress
 from plate.models import Review, User
-from .forms import ReviewForm, ProfileForm
+from .forms import ReviewForm, ProfileForm, CommentForm
 from .functions import confirmation_required_redirect
 
 # Create your views here.
@@ -21,6 +21,11 @@ class ReviewDetail(DetailView):
     template_name = "plate/review_detail.html"
     pk_url_kwarg = "review_id"
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = CommentForm()
+        return context
+        
 class ReviewCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Review
     template_name = "plate/review_form.html"

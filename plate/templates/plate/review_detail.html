@@ -1,7 +1,7 @@
 {% extends "plate_base/base_with_navbar.html" %}
 
 {% load static %}
-
+{% load widget_tweaks %}
 {% block title %}{{ review.title }} | Coplate{% endblock title %}
 
 {% block content %}
@@ -54,6 +54,18 @@
           <span> 댓글 {{ review.comments.count }}</span>
         </div>
       </div>
+      <form class="comment-create-form" action="#" method="post">
+        {% csrf_token %}
+        {% if user.is_authenticated %}
+          {{ form.content|attr:"placeholder:댓글 내용을 입력해주세요."|add_class:"cp-input" }}
+          <button class="cp-button small" type="submit">등록</button>
+        {% else%}
+          <a href="{% url 'account_login' %}?next={% url 'review-detail' review.id %}">
+            {{ form.content|attr:"placeholder:댓글을 작성하려면 로그인이 필요합니다."|add_class:"cp-input"|attr:"disabled" }}
+          </a>
+            <button class="cp-button small secondary" type="submit" disabled>등록</button>
+        {% endif %}
+      </form>
       <div class="comment-list">
         {% for comment in review.comments.all %}
           <div class="comment">
