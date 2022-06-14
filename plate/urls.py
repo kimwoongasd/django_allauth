@@ -21,5 +21,7 @@ urlpatterns = [
     
     # comment
     path("review/<int:review_id>/comments/create/", views.CommentCreateView.as_view(), name="comment-create"),
+    path("review/<int:comment_id>/comments/edit/", views.CommentUpdateView.as_view(), name="comment-update"),
+    path("review/<int:comment_id>/comments/delete/", views.CommentDeleteView.as_view(), name="comment-delete"),
     
 ]

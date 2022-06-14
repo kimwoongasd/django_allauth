@@ -117,7 +117,24 @@ class CommentCreateView(LoginAndVerificationRequiredMixin, CreateView):
     
     def get_success_url(self):
         return reverse("review-detail", kwargs={"review_id":self.kwargs.get("review_id")})
+
+class CommentUpdateView(LoginAndOwnershipRequiredMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = "plate/comment_update_form.html"
+    pk_url_kwarg = "comment_id"
     
+    def get_success_url(self):
+        return reverse("review-detail", kwargs={"review_id":self.object.review.id})
+    
+class CommentDeleteView(LoginAndOwnershipRequiredMixin, DeleteView):
+    model = Comment
+    template_name = "plate/comment_confirm_delete.html"
+    pk_url_kwarg = "comment_id"
+
+    def get_success_url(self):
+        return reverse("review-detail", kwargs={"review_id":self.object.review.id})
+
 class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     def get_success_url(self):
         return reverse("profile", kwargs={"user_id": self.request.user.id})
