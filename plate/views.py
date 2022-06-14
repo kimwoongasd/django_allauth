@@ -1,11 +1,10 @@
-from turtle import update
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from allauth.account.views import PasswordChangeView
 from braces.views import LoginRequiredMixin, UserPassesTestMixin
 from allauth.account.models import EmailAddress
-from plate.models import Review, User
+from plate.models import Review, User, Comment
 from .forms import ReviewForm, ProfileForm, CommentForm
 from .functions import confirmation_required_redirect
 
@@ -124,8 +123,27 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         return self.request.user
     
     def get_success_url(self):
-        return  reverse("profile", kwargs={"user_id": self.request.user.id})
+        return reverse("profile", kwargs={"user_id": self.request.user.id})
 
+class CommentCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    http_method_names = ["post"]
+    model = Comment
+    form_class = CommentForm
+    
+    redirect_unauthenticated_users = True
+    raise_exception = confirmation_required_redirect
+    
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.review = Review.objects.get(id=self.kwargs.get("review_id"))
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse("review-detail", kwargs={"review_id":self.kwargs.get("review_id")})
+    
+    def test_func(self, user):
+        return EmailAddress.objects.filter(user=user, verified=True).exists()
+    
 class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     def get_success_url(self):
         return reverse("profile", kwargs={"user_id": self.request.user.id})

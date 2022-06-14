@@ -19,4 +19,7 @@ urlpatterns = [
     path("set-profile/", views.ProfileSetView.as_view(), name="profile-set"),
     path("edit-profile/", views.ProfileUpdateView.as_view() , name="profile-update"),
     
+    # comment
+    path("review/<int:review_id>/comments/create/", views.CommentCreateView.as_view(), name="comment-create"),
+    
 ]
