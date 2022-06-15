@@ -18,6 +18,15 @@
     {% if latest_reviews %}
       <a class="cp-button" href="{% url 'review-list' %}">전체 리뷰 보러가기</a>
     {% endif %}
+    {% if user.is_authenticated %}
+      <div class="header">
+        <h2>팔로잉 유저들의 리뷰</h2>
+      </div>
+      {% include 'components/review_list.html' with reviews=latest_following_reviews empty_message="아직 리뷰가 없어요 :(" %}
+      {% if latest_following_reviews %}
+        <a class="cp-button" href="{% url 'following-review-list' %}">팔로잉 유저 리뷰 모아보기</a>
+      {% endif %}
+    {% endif %}
   </div>
 </main>
 {% endblock content %}

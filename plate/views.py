@@ -13,8 +13,10 @@ class IndexListView(ListView):
     def get(self, request, *args, **kwargs):
         context = {}
         context['latest_reviews'] = Review.objects.all().order_by('-dt_created')[:4]
+        user = self.request.user
+        if user.is_authenticated:
+            context["latest_following_reviews"] = Review.objects.filter(author__followers=user)[:4]
         return render(request, 'plate/index.html', context)
-
 
 class ReviewListView(ListView):
     model = Review
@@ -22,6 +24,15 @@ class ReviewListView(ListView):
     template_name = 'plate/review_list.html'
     paginate_by = 8
     ordering = ['-dt_created']
+    
+class FollowingReviewListView(LoginRequiredMixin, ListView):
+    model = Review
+    context_object_name = 'following_reviews'
+    template_name = 'plate/following_review_list.html'
+    paginate_by = 8
+
+    def get_queryset(self):
+        return Review.objects.filter(author__followers=self.request.user)
     
 class ReviewDetail(DetailView):
     model = Review

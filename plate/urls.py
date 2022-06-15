@@ -10,6 +10,7 @@ urlpatterns = [
         name="review-detail"
     ),
     path('reviews/', views.ReviewListView.as_view(), name='review-list'),
+    path('reviews/following/', views.FollowingReviewListView.as_view(), name='following-review-list'),
     path("review/new/", views.ReviewCreate.as_view(), name="review-create"),
     path("review/<int:review_id>/edit/", views.ReviewUpdate.as_view(), name="review-update"),
     path("review/<int:review_id>/delete/", views.ReviewDelete.as_view(), name="review-delete"),
