@@ -247,6 +247,26 @@ ul.navbar li {
   flex-grow: 1;
 }
 
+.content-list .cp-button:not(.search-button) {
+  display: block;
+  width: 450px;
+  margin: 50px auto 0 auto;
+}
+
+.index .content-list .header:not(:first-child) {
+  margin-top: 170px;
+}
+
+/* search-button */
+
+.search-form .cp-button {
+  width: 125px;
+  height: 55px;
+  font-size: 21px;
+  font-weight: bold;
+  margin-left: 12px;
+}
+
 /* main-header */
 
 .main-header {
@@ -671,6 +691,21 @@ a.like-button:hover {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.profile-header .follow-section {
+  margin: auto 20px;
+  white-space: nowrap;
+}
+
+.profile-header .vert-divider {
+  margin: 0 12px;
+}
+
+.follow-button .cp-button {
+  width: 107px;
+  display: flex;
+  justify-content: center;
 }
 
 /* account */

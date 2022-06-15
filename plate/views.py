@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from django.contrib.contenttypes.models import ContentType
@@ -10,10 +10,18 @@ from .mixins import LoginAndVerificationRequiredMixin, LoginAndOwnershipRequired
 
 # Create your views here.
 class IndexListView(ListView):
+    def get(self, request, *args, **kwargs):
+        context = {}
+        context['latest_reviews'] = Review.objects.all().order_by('-dt_created')[:4]
+        return render(request, 'plate/index.html', context)
+
+
+class ReviewListView(ListView):
     model = Review
-    template_name = "plate/index.html"
-    context_object_name = "reviews"
-    paginate_by = 4
+    context_object_name = 'reviews'
+    template_name = 'plate/review_list.html'
+    paginate_by = 8
+    ordering = ['-dt_created']
     
 class ReviewDetail(DetailView):
     model = Review
@@ -173,6 +181,36 @@ class ProcessFollowView(LoginAndVerificationRequiredMixin, View):
         else:
             user.following.add(profile_user_id)
         return redirect("profile", user_id=profile_user_id)
+    
+class FollowingListView(ListView):
+    model = User
+    template_name = "plate/following_list.html"
+    context_object_name = "following"
+    paginate_by = 10
+
+    def get_queryset(self):
+        profile_user = get_object_or_404(User, pk=self.kwargs.get("user_id"))
+        return profile_user.following.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["profile_user_id"] = self.kwargs.get("user_id")
+        return context
+
+class FollowerListView(ListView):
+    model = User
+    template_name = "plate/follower_list.html"
+    context_object_name = "followers"
+    paginate_by = 10
+
+    def get_queryset(self):
+        profile_user = get_object_or_404(User, pk=self.kwargs.get("user_id"))
+        return profile_user.followers.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["profile_user_id"] = self.kwargs.get("user_id")
+        return context
 
 class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     def get_success_url(self):
