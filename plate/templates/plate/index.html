@@ -6,6 +6,12 @@
     <div class="content">
       <div class="fg"></div>
       <h1>오늘은 어디서 먹을까?</h1>
+      <div class="header-search">
+        <form class="search-form" action="{% url 'search' %}" method="get">
+          <input class="search-input" name="query" type="text" placeholder="식당, 음식 등을 검색해보세요" required>
+          <button class="cp-button search-button" type="submit">검색</button>
+        </form>
+      </div>
     </div>
   </div>
 

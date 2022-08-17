@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 from allauth.account.views import PasswordChangeView
 from braces.views import LoginRequiredMixin
 from plate.models import Review, User, Comment, Like
@@ -20,20 +21,39 @@ class IndexListView(ListView):
 
 class ReviewListView(ListView):
     model = Review
-    context_object_name = 'reviews'
-    template_name = 'plate/review_list.html'
+    context_object_name = "reviews"
+    template_name = "plate/review_list.html"
     paginate_by = 8
-    ordering = ['-dt_created']
+    ordering = ["-dt_created"]
     
 class FollowingReviewListView(LoginRequiredMixin, ListView):
     model = Review
-    context_object_name = 'following_reviews'
-    template_name = 'plate/following_review_list.html'
+    context_object_name = "following_reviews"
+    template_name = "plate/following_review_list.html"
     paginate_by = 8
 
     def get_queryset(self):
         return Review.objects.filter(author__followers=self.request.user)
+
+class SearchView(ListView):
+    model = Review
+    context_object_name = "search_results"
+    template_name = "plate/search_results.html"
+    paginate_by = 8
     
+    def get_queryset(self):
+        query = self.request.GET.get('query', '')
+        return Review.objects.filter(
+            Q(title__icontains=query)
+            | Q(store_name__icontains=query)
+            | Q(content__icontains=query)
+            )
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["query"] = self.request.GET.get('query', '')
+        return context
+
 class ReviewDetail(DetailView):
     model = Review
     template_name = "plate/review_detail.html"
